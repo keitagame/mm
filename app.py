@@ -359,6 +359,53 @@ def png_status():
     img_io.seek(0)
 
     return Response(img_io.getvalue(), mimetype='image/png')
+@app.route('/status')
+def status_page():
+    url = request.args.get('url')
+
+    if not url:
+        return "URL parameter is required", 400
+
+    service = {"url": url}
+    status = check_service(service)
+    status_code = status['status_code']
+
+    if isinstance(status_code, int):
+        full_status = f"{status_code} {status.get('reason','')}"
+    else:
+        full_status = status_code
+
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Status - {url}</title>
+        <style>
+        body {{
+            font-family: monospace;
+            text-align: center;
+            background: white;
+        }}
+        .ok {{ color: #00b700; }}
+        .r {{ color: #ff8000; }}
+        .e {{ color: #ff0c0c; }}
+        </style>
+    </head>
+    <body>
+        <h1>Status Detail</h1>
+        <p><b>URL:</b> {url}</p>
+        <p><b>Status:</b> {full_status}</p>
+        <p><b>Response Time:</b> {status.get('elapsed','-')} ms</p>
+        <p><b>Last Check:</b> {status.get('last_check','-')}</p>
+        <p><a href="/svg?url={url}">SVGで表示</a></p>
+        <p><a href="/png?url={url}">PNGで表示</a></p>
+        <p><a href="/">← 戻る</a></p>
+    </body>
+    </html>
+    """
+
+    return html
 
 if __name__ == '__main__':
     # 初回チェック
