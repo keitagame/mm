@@ -153,17 +153,18 @@ font-weight:400;
 text-align:center;
 }
 table {
+font-size:10px;
 margin: 0 auto;
   border: 1px solid #000;
 }
 
 table th {
-  padding:10px;
+  padding:8px;
   border: 1px solid #000;
 }
 
 table td {
-  padding:10px;
+  padding:8px;
   border: 1px solid #000;
 }
 .ok{
