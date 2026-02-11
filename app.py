@@ -16,6 +16,18 @@ SERVICES = [
         'name': 'ポートフォリオ'
     },
     {
+        'url': 'https://keitagames.com/midi-okiba',
+        'name': 'midi置き場'
+    },
+    {
+        'url': 'https://keitagames.com/midi',
+        'name': 'midiプレイヤー'
+    },
+    {
+        'url': 'https://keitagames.com/FAMICOMU',
+        'name': 'ファミコンエミュレータgithub'
+    },
+    {
         'url': 'https://nes.keitagames.com',
         'name': 'ファミコンエミュレータ'
     },
