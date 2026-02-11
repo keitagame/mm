@@ -1,5 +1,7 @@
 from flask import Flask, render_template_string,request, Response
 import requests
+from PIL import Image, ImageDraw, ImageFont
+import io
 import html
 from datetime import datetime
 import threading
@@ -314,6 +316,49 @@ def svg_status():
 </svg>'''
 
     return Response(svg, mimetype='image/svg+xml')
+@app.route('/png')
+def png_status():
+    url = request.args.get('url')
+
+    if not url:
+        return Response("URL parameter is required", status=400)
+
+    service = {"url": url}
+    status = check_service(service)
+    status_code = status['status_code']
+
+    if isinstance(status_code, int):
+        text = f"{status_code} {status.get('reason','')}"
+    else:
+        text = str(status_code)
+
+    # 色決定
+    if isinstance(status_code, int) and 200 <= status_code < 300:
+        color = (0, 183, 0)
+    elif isinstance(status_code, int) and 300 <= status_code < 400:
+        color = (255, 128, 0)
+    else:
+        color = (255, 12, 12)
+
+    # 画像生成
+    width = 300
+    height = 50
+    image = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(image)
+
+    try:
+        font = ImageFont.truetype("arial.ttf", 20)
+    except:
+        font = ImageFont.load_default()
+
+    draw.text((10, 15), text, fill=color, font=font)
+
+    # バイト変換
+    img_io = io.BytesIO()
+    image.save(img_io, 'PNG')
+    img_io.seek(0)
+
+    return Response(img_io.getvalue(), mimetype='image/png')
 
 if __name__ == '__main__':
     # 初回チェック
