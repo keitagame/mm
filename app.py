@@ -159,6 +159,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 body{
 text-align:center;
 background:white;
+font-family:sans-serif;
 }
 h1{
 font-weight:400;
