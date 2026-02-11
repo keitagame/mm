@@ -88,17 +88,29 @@ SERVICES = [
 def check_service(service):
     """サービスの状態をチェック"""
     try:
+        start = time.time()
         response = requests.get(service['url'], timeout=10, allow_redirects=False)
+        elapsed = round((time.time() - start) * 1000, 2)  # ms
+
         return {
             'status_code': response.status_code,
+            'reason': response.reason,  # ← OK や Not Found
+            'elapsed': elapsed,
+            'headers': dict(response.headers),
+            'redirect': response.headers.get('Location'),
             'last_check': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
+
     except requests.exceptions.RequestException as e:
         return {
             'status_code': 'Error',
-            'last_check': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'error': str(e)
+            'reason': '',
+            'elapsed': None,
+            'redirect': None,
+            'error': str(e),
+            'last_check': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
+
 
 def get_status_class(status_code):
     """ステータスコードに応じたCSSクラスを返す"""
@@ -147,24 +159,25 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 body{
 text-align:center;
 background:white;
+font-family:sans-serif;
 }
 h1{
 font-weight:400;
 text-align:center;
 }
 table {
-font-size:10px;
+font-size:8px;
 margin: 0 auto;
   border: 1px solid #000;
 }
 
 table th {
-  padding:8px;
+  padding:5px;
   border: 1px solid #000;
 }
 
 table td {
-  padding:8px;
+  padding:5px;
   border: 1px solid #000;
 }
 .ok{
@@ -194,9 +207,33 @@ color:rgb(255, 128, 0);
   <tbody>
     {% for service in services %}
     <tr>
-      <th><a href="{{ service.url }}">{{ service.url }}</a></th>
+      <td><a href="{{ service.url }}" target="_blank">{{ service.url }}</a></td>
       <td>{{ service.name }}</td>
-      <td><div class="{{ service.status_class }}">{{ service.status_display }}</div></td>
+
+      <td>
+        <div class="{{ service.status_class }}">
+          {{ service.status_display }}
+        </div>
+      </td>
+
+      <td>
+        {% if service.elapsed %}
+          {{ service.elapsed }} ms
+        {% else %}
+          -
+        {% endif %}
+      </td>
+
+      <td>{{ service.last_check }}</td>
+
+      <td>
+        {% if service.redirect %}
+          Redirect → {{ service.redirect }}
+        {% endif %}
+        {% if service.error %}
+          Error: {{ service.error }}
+        {% endif %}
+      </td>
     </tr>
     {% endfor %}
   </tbody>
@@ -207,23 +244,40 @@ color:rgb(255, 128, 0);
 
 @app.route('/')
 def index():
-    """メインページ"""
     services_data = []
-    
+
     for service in SERVICES:
-        status = service_status.get(service['url'], {'status_code': 'Pending', 'last_check': 'N/A'})
+        status = service_status.get(service['url'], {
+            'status_code': 'Pending',
+            'last_check': 'N/A'
+        })
+
         status_code = status['status_code']
-        
+
+        # ステータス全文表示
+        if isinstance(status_code, int):
+            full_status = f"{status_code} {status.get('reason','')}"
+        else:
+            full_status = status_code
+
         services_data.append({
             'url': service['url'],
             'name': service['name'],
             'status_class': get_status_class(status_code),
-            'status_display': str(status_code)
+            'status_display': full_status,
+            'elapsed': status.get('elapsed'),
+            'last_check': status.get('last_check'),
+            'error': status.get('error'),
+            'redirect': status.get('redirect')
         })
-    
+
     last_update = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    
-    return render_template_string(HTML_TEMPLATE, services=services_data, last_update=last_update)
+
+    return render_template_string(
+        HTML_TEMPLATE,
+        services=services_data,
+        last_update=last_update
+    )
 
 if __name__ == '__main__':
     # 初回チェック
