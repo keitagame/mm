@@ -17,15 +17,15 @@ SERVICES = [
     },
     {
         'url': 'https://nes.keitagames.com',
-        'name': 'ファミコンエミュレータ2'
-    },
-    {
-        'url': 'https://famicomu.com',
         'name': 'ファミコンエミュレータ'
     },
     {
-        'url': 'https://atlas.com',
-        'name': '検索エンジン'
+        'url': 'https://taiko.keitagames.com',
+        'name': 'frankey'
+    },
+    {
+        'url': 'https://frank-community.github.io',
+        'name': 'フランクのサイト'
     }
 ]
 
