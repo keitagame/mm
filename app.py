@@ -23,6 +23,30 @@ SERVICES = [
         'url': 'https://taiko.keitagames.com',
         'name': 'frankey'
     },
+     {
+        'url': 'https://keitagames.com/frasite',
+        'name': '初代フランクなホームページ'
+    },
+    {
+        'url': 'https://wiki-g0g9.onrender.com',
+        'name': 'frawiki'
+    },
+      {
+        'url': 'https://moecounter-gms6.onrender.com',
+        'name': 'moecounter'
+    },
+    {
+        'url': 'https://postr-d8u0.onrender.com',
+        'name': '掲示板Postr'
+    },
+    {
+        'url': 'https://shinya-bbs.onrender.com',
+        'name': '深夜テンションの掲示板'
+    },
+    {
+        'url': 'https://code.keitagames.com',
+        'name': '開発環境'
+    },
     {
         'url': 'https://frank-community.github.io',
         'name': 'フランクのサイト'
