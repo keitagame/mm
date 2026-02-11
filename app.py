@@ -60,6 +60,26 @@ SERVICES = [
         'name': '開発環境'
     },
     {
+        'url': 'https://keita-status.onrender.com/',
+        'name': '自ら'
+    },
+    {
+        'url': 'https://atlas-1fck.onrender.com',
+        'name': '検索エンジン'
+    },
+    {
+        'url': 'https://taiko-j9b7.onrender.com/',
+        'name': '太鼓web'
+    },
+    {
+        'url': 'https://catblog-5so7.onrender.com',
+        'name': 'ブログ兼wiki'
+    },
+    {
+        'url': 'https://atlas-news.onrender.com',
+        'name': '地震速報'
+    },
+    {
         'url': 'https://frank-community.github.io',
         'name': 'フランクのサイト'
     }
