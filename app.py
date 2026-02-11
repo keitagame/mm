@@ -165,18 +165,18 @@ font-weight:400;
 text-align:center;
 }
 table {
-font-size:10px;
+font-size:8px;
 margin: 0 auto;
   border: 1px solid #000;
 }
 
 table th {
-  padding:8px;
+  padding:5px;
   border: 1px solid #000;
 }
 
 table td {
-  padding:8px;
+  padding:5px;
   border: 1px solid #000;
 }
 .ok{
