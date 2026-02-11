@@ -197,7 +197,7 @@ def index():
             'url': service['url'],
             'name': service['name'],
             'status_class': get_status_class(status_code),
-            'status_display': get_status_display(status_code)
+            'status_display': str(status_code)
         })
     
     last_update = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
