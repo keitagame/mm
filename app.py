@@ -206,7 +206,7 @@ color:rgb(255, 128, 0);
   <tbody>
     {% for service in services %}
     <tr>
-      <td><a href="{{ service.url }}">{{ service.url }}</a></td>
+      <td><a href="{{ service.url }}" target="_blank">{{ service.url }}</a></td>
       <td>{{ service.name }}</td>
 
       <td>
