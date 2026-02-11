@@ -1,5 +1,6 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string,request, Response
 import requests
+import html
 from datetime import datetime
 import threading
 import time
@@ -278,6 +279,41 @@ def index():
         services=services_data,
         last_update=last_update
     )
+@app.route('/svg')
+def svg_status():
+    url = request.args.get('url')
+
+    if not url:
+        return Response("URL parameter is required", status=400)
+
+    # URLをチェック
+    service = {"url": url}
+    status = check_service(service)
+    status_code = status['status_code']
+
+    if isinstance(status_code, int):
+        text = f"{status_code} {status.get('reason','')}"
+    else:
+        text = str(status_code)
+
+    # 色決定
+    if isinstance(status_code, int) and 200 <= status_code < 300:
+        color = "#00b700"
+    elif isinstance(status_code, int) and 300 <= status_code < 400:
+        color = "#ff8000"
+    else:
+        color = "#ff0c0c"
+
+    text = html.escape(text)
+
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="220" height="40">
+<rect width="220" height="40" fill="white" stroke="black"/>
+<text x="10" y="25" font-family="monospace" font-size="16" fill="{color}">
+{text}
+</text>
+</svg>'''
+
+    return Response(svg, mimetype='image/svg+xml')
 
 if __name__ == '__main__':
     # 初回チェック
